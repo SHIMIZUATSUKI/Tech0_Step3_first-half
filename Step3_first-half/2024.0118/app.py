@@ -4,8 +4,8 @@ import sqlite3
 
 def load_data():
     # SQLiteデータベースへの接続
-    conn = sqlite3.connect('SUUMO_Otaku_database.db')
-    query = 'SELECT * FROM "20231212_SUUMO_Otaku2"'
+    conn = sqlite3.connect('SUUMO_Otaku_database.db')  
+    query = "SELECT * FROM '20231212_SUUMO_Otaku2'"
     df = pd.read_sql_query(query, conn)
     conn.close()
     
