@@ -3,18 +3,19 @@ import pandas as pd
 import sqlite3
 
 def load_data():
-    # Streamlit CloudでのSQLiteデータベースへの接続
-    conn = st.experimental_connection('SUUMO_Otaku_database.db', type='sql')
+    # SQLiteデータベースへの接続
+    conn = sqlite3.connect('SUUMO_Otaku_database.db')
     query = 'SELECT * FROM "20231212_SUUMO_Otaku2"'
     df = pd.read_sql_query(query, conn)
     conn.close()
-
+    
     # 必要なカラムを整数型に変換
     df['最寄駅1からの時間(分)'] = pd.to_numeric(df['最寄駅1からの時間(分)'], errors='coerce')
     df['家賃(円)'] = pd.to_numeric(df['家賃(円)'], errors='coerce')
     df['築年数(年)'] = pd.to_numeric(df['築年数(年)'], errors='coerce')
-
+    
     return df
+
 
 def filter_data(df, time_range, layout, rent_range, age_range):
     # 最寄駅からの時間でフィルタリング
