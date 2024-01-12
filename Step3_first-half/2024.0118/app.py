@@ -3,7 +3,8 @@ import pandas as pd
 import sqlite3
 
 def load_data():
-    conn = sqlite3.connect('SUUMO_Otaku_database.db')
+    # Streamlit CloudでのSQLiteデータベースへの接続
+    conn = st.experimental_connection('SUUMO_Otaku_database.db', type='sql')
     query = 'SELECT * FROM "20231212_SUUMO_Otaku2"'
     df = pd.read_sql_query(query, conn)
     conn.close()
