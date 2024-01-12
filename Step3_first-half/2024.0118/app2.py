@@ -1,13 +1,14 @@
 import streamlit as st
 import pandas as pd
-import sqlite3
+from sqlalchemy import create_engine
 
 def load_data():
-    # SQLiteデータベースへの接続
-    conn = sqlite3.connect('SUUMO_Otaku_database.db')  
+    # SQLAlchemyのエンジンを作成し、データベースに接続
+    engine = create_engine('sqlite:///SUUMO_Otaku_database.db')
+    
+    # SQLクエリを実行し、結果をDataFrameに読み込む
     query = 'SELECT * FROM "20231212_SUUMO_Otaku2"'
-    df = pd.read_sql_query(query, conn)
-    conn.close()
+    df = pd.read_sql(query, engine)
     
     # 必要なカラムを整数型に変換
     df['最寄駅1からの時間(分)'] = pd.to_numeric(df['最寄駅1からの時間(分)'], errors='coerce')
@@ -51,5 +52,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-   
