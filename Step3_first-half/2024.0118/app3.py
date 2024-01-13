@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 from sqlalchemy import create_engine
 
-@st.cache_data  # st.cacheからst.cache_dataに変更
+# st.cache_dataデコレータを追加し、ttlとmax_entriesを設定
+@st.cache_data(ttl=3600, max_entries=10)  # 例：1時間のTTLと最大10エントリ
 def load_data():
     # SQLAlchemyのエンジンを作成し、データベースに接続
     engine = create_engine('sqlite:///Tokyo_RealEstate_DB.db')
