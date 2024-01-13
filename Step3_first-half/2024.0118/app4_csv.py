@@ -3,7 +3,7 @@ import pandas as pd
 
 def load_data():
     #csvからの出力
-    df = pd.read_csv('SUUMO_Otaku2.csv', encoding='UTF-8')
+    df = pd.read_csv('./data/SUUMO_Otaku2.csv', encoding='UTF-8')
     
     # 必要なカラムを整数型に変換
     df['最寄駅1からの時間(分)'] = pd.to_numeric(df['最寄駅1からの時間(分)'], errors='coerce')
