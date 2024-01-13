@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from sqlalchemy import create_engine
 
+@st.cache  # ここにst.cacheデコレータを追加
 def load_data():
     # SQLAlchemyのエンジンを作成し、データベースに接続
     engine = create_engine('sqlite:///Tokyo_RealEstate_DB.db')
