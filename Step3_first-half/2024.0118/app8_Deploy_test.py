@@ -4,7 +4,8 @@ import sqlite3
 import os
 
 # Streamlit Cloud上での実行時に、正しいデータベースファイルのパスを取得
-db_path = os.path.join(os.getcwd(), 'Tokyo_RealEstate_DB.db')
+# サブディレクトリ '2024.0118' 内の 'Tokyo_RealEstate_DB.db' へのパスを指定
+db_path = os.path.join('2024.0118', 'Tokyo_RealEstate_DB.db')
 
 # データベースファイルの存在を確認
 if not os.path.exists(db_path):
@@ -19,3 +20,4 @@ else:
     st.write(df)
 
     conn.close()
+
