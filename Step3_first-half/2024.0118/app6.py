@@ -4,7 +4,6 @@ from sqlalchemy import create_engine
 
 # st.cache_dataデコレータを使用してデータのキャッシュを設定
 @st.cache_data(ttl=3600, max_entries=10)  # 例：1時間のTTLと最大10エントリ
-
 def load_data():
     # SQLAlchemyのエンジンを作成し、データベースに接続
     engine = create_engine('sqlite:///Tokyo_RealEstate_DB.db')
@@ -45,7 +44,6 @@ def load_data():
     
     return df
 
-# 以降の関数とmain関数は変更なし
 
 def filter_data(df, time_range, layout, rent_range, age_range):
     # 最寄駅からの時間でフィルタリング
