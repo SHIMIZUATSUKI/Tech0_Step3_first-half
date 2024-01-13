@@ -2,12 +2,14 @@ import streamlit as st
 import pandas as pd
 from sqlalchemy import create_engine
 
-# st.cache_dataデコレータを使用してデータのキャッシュを設定
-@st.cache_data(ttl=3600, max_entries=10)  # 例：1時間のTTLと最大10エントリ
+@st.cache(ttl=3600, max_entries=10, allow_output_mutation=True)
 def load_data():
-    # SQLAlchemyのエンジンを作成し、データベースに接続
-    engine = create_engine('sqlite:///Tokyo_RealEstate_DB.db')
+    # st.secretsを使用してデータベースURLを取得
+    database_url = st.secrets["database"]["url"]
     
+    # 取得したURLを使用してSQLAlchemyのエンジンを作成し、データベースに接続
+    engine = create_engine(database_url)
+
     # SQLクエリを実行し、結果をDataFrameに読み込む
     query = 'SELECT * FROM "Ota_Ward"'
     df = pd.read_sql(query, engine)
