@@ -104,7 +104,7 @@ def main():
     st.sidebar.title("▼検索条件")
     
     # サイドバーで東京23区を選択
-    selected_wards = st.sidebar.multiselect('23区を選択)', wards_of_tokyo)
+    selected_wards = st.sidebar.multiselect('23区を選択', wards_of_tokyo)
     #各種細かい条件設定
     #家賃・敷金・礼金
     rent_range = st.sidebar.slider('家賃の範囲（円）', 100000, 300000, (150000, 200000), 10000)
