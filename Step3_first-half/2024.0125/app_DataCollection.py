@@ -34,6 +34,8 @@ d_list = []
 #for i in tqdm(range(1, 3)):
 #最後のページまでを取得する
 #for i in tqdm(range(1, last_page+1)):
+#tqdmは.pyでは使用できない
+
 for i in range(1, 3):
 
     
