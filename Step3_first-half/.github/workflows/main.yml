@@ -1,6 +1,7 @@
 name: Run Python Script
 
 on:
+  push:
   schedule:
     - cron: '0 19 * * 5'  # UTCで毎週金曜日19時(日本時間で毎週土曜日の4時))
 
