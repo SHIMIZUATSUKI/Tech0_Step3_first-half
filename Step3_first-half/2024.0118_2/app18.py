@@ -11,6 +11,8 @@ import matplotlib
 import matplotlib.font_manager as font_manager
 import numpy as np
 
+# Define the font family you want to use
+matplotlib.rcParams['font.family'] = 'monospace'
 
 
 # Streamlitのキャッシュデコレータを追加して、データの読み込みを高速化
