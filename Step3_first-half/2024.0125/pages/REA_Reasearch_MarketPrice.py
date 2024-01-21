@@ -12,7 +12,9 @@ import matplotlib.font_manager as font_manager
 import numpy as np
 
 # Define the font family you want to use
-matplotlib.rcParams['font.family'] = 'monospace'
+# matplotlib.rcParams['font.family'] = 'monospace'
+plt.rcParams['font.family'] = 'TakaoPGothic'
+
 
 # Streamlitのキャッシュデコレータを追加して、データの読み込みを高速化
 @st.cache(ttl=3600, max_entries=10, allow_output_mutation=True)
