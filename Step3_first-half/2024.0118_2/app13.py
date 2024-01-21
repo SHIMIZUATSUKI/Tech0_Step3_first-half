@@ -108,6 +108,8 @@ def main():
     layout = st.sidebar.multiselect('間取り', df['間取り'].unique())
     age_range = st.sidebar.slider('築年数の範囲（年）', 0, 30, (0, 10), 1)
     
+    st.write("←左の入力欄から条件を設定し、'検索'ボタンを押してください。")
+
     # 検索ボタン
     if st.sidebar.button('検索'):
         # 選択された区に基づいてデータをフィルタリング
@@ -116,48 +118,47 @@ def main():
         else:
             df_filtered_by_wards = df
             
-         # その他のフィルターを適用
-        filtered_df = filter_data(df_filtered_by_wards, time_range, layout, rent_range, age_range, no_deposit, no_key_money)
-        
-        # フィルタリングされたデータフレームのインデックスに名前を設定
-        filtered_df.index.name = '物件No.'
-
-        
-        # フィルタリングされた物件数を表示
-        filtered_count = len(filtered_df)
-        st.write(f"条件に合った物件数: {filtered_count}")
-        st.dataframe(filtered_df.reset_index()[['物件No.', '物件名', 'アクセス', '間取り', '家賃(円)', '管理費(円)', '敷金(円)', '礼金(円)', '建物の階数', '面積(m2)', '築年数(年)', '住所', 'URL']], width=1500, height=500)
-        
-        # セッション状態にフィルタリングされたデータフレームを保存
-        st.session_state['filtered_df'] = filtered_df
-        
-    # フィルタリングされたデータフレームがセッション状態に存在する場合に処理を行う
-    if 'filtered_df' in st.session_state:
-        # 物件Noの選択
-        property_no = st.selectbox('物件Noを選択してください', st.session_state['filtered_df'].index)
-
-        
-        
-
-        # 選択された物件の詳細表示
-        selected_property = st.session_state['filtered_df'].loc[property_no]
-        st.write('物件名:', selected_property['物件名'])
-        st.image(selected_property['物件写真'], caption='物件写真')
-        st.markdown(f"[物件の詳細]({selected_property['URL']})", unsafe_allow_html=True)
-
-        # 費用シミュレーション
-        initial_cost = selected_property['家賃(円)'] + selected_property['管理費(円)'] + selected_property['敷金(円)'] + selected_property['礼金(円)']
-        monthly_cost = selected_property['家賃(円)'] + selected_property['管理費(円)']
-        annual_cost = (selected_property['家賃(円)'] + selected_property['管理費(円)']) * 12
-
-        st.write('初期費用:', initial_cost, '円')
-        st.write('1ヶ月の費用:', monthly_cost, '円')
-        st.write('1年間の費用:', annual_cost, '円')
-        
-        
-    else:
-        st.write("←左の入力欄から条件を設定し、'検索'ボタンを押してください。")
             
+        # その他のフィルターを適用
+        st.session_state['filtered_df'] = filter_data(df_filtered_by_wards, time_range, layout, rent_range, age_range, no_deposit, no_key_money)
+  
+
+    # フィルタリングされたデータフレームの表示
+    if 'filtered_df' in st.session_state:
+        if len(st.session_state['filtered_df']) > 0:
+            filtered_df = st.session_state['filtered_df']
+            filtered_df.index.name = '物件No.'
+            st.write(f"条件に合った物件数: {len(filtered_df)}")
+            st.dataframe(filtered_df.reset_index()[['物件No.', '物件名', 'アクセス', '間取り', '家賃(円)', '管理費(円)', '敷金(円)', '礼金(円)', '建物の階数', '面積(m2)', '築年数(年)', '住所', 'URL']], width=1500, height=500)
+
+            # 物件Noの選択
+            property_no = st.selectbox('物件Noを選択してください', filtered_df.index, index=0)
+            property_no2 = st.selectbox('比較したい物件Noを選択してください', filtered_df.index, index=1)
+
+            # 同じ物件が選択された場合の警告
+            if property_no == property_no2:
+                st.warning('異なる物件を選択してください。')
+
+            # 選択された物件の詳細表示と費用シミュレーション
+            for p_no in [property_no, property_no2]:
+                if p_no is not None:
+                    selected_property = st.session_state['filtered_df'].loc[p_no]
+                    st.write('物件名:', selected_property['物件名'])
+                    st.image(selected_property['物件写真'], caption='物件写真')
+                    st.markdown(f"[物件の詳細]({selected_property['URL']})", unsafe_allow_html=True)
+
+                    # 費用シミュレーション
+                    initial_cost = selected_property['敷金(円)'] + selected_property['礼金(円)']
+                    monthly_cost = selected_property['家賃(円)'] + selected_property['管理費(円)']
+                    annual_cost = (selected_property['家賃(円)'] + selected_property['管理費(円)']) * 12
+
+                    st.write('初期費用:', initial_cost, '円')
+                    st.write('1ヶ月の費用:', monthly_cost, '円')
+                    st.write('1年間の費用:', annual_cost, '円')
+                    st.write('*初期費用は敷金と礼金を合計した金額です。')
+
+        else:
+            st.write('該当の物件はございません。')
 
 if __name__ == '__main__':
     main()
