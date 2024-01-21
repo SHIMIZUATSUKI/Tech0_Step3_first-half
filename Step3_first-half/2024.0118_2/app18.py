@@ -116,8 +116,12 @@ def main():
     
     st.write("←左の入力欄から条件を設定し、'検索'ボタンを押してください。")
     
-    # 散布図とヒストグラムの作成に必要なサイドバー項目を追加
-    scatter_x_options = ['最寄駅1からの時間(分)', '築年数(年)', '面積(m2)']
+    # 散布図必要なサイドバー項目を追加
+    # Scatter plots
+    scatter_x_options = {
+    '最寄駅1からの時間(分)': 'Time to Nearest Station 1 (min)',
+    '築年数(年)': 'Building Age (years)',
+    '面積(m2)': 'Area (m2)'}
 
     
     # 検索ボタン
@@ -157,76 +161,47 @@ def main():
             st.write('1年間の費用:', annual_cost, '円')
             st.write('*初期費用は敷金と礼金を合計した金額です。')    
 
-            # 散布図を描画
-            # scatter_x_options = ['最寄駅1からの時間(分)', '築年数(年)', '面積(m2)']
-            for feature in scatter_x_options:
+            for feature_jp, feature_en in scatter_x_options.items():
                 fig, ax = plt.subplots()
-                # 選択された物件以外を青色でプロット
-                ax.scatter(filtered_df[filtered_df.index != property_no][feature], 
+                # Plotting other properties in blue
+                ax.scatter(filtered_df[filtered_df.index != property_no][feature_jp], 
                         filtered_df[filtered_df.index != property_no]['家賃(円)'],
-                        color='blue', label='その他の物件')
-                # 選択された物件を赤色でプロット
+                        color='blue', label='Other Properties')
+                # Plotting selected property in red
                 if property_no in filtered_df.index:
-                    ax.scatter(filtered_df.loc[property_no, feature], 
+                    ax.scatter(filtered_df.loc[property_no, feature_jp], 
                             filtered_df.loc[property_no, '家賃(円)'],
-                            color='red', label='選択された物件')
+                            color='red', label='Selected Property')
                 
-                ax.set_xlabel(feature, fontsize=14)
-                ax.set_ylabel('家賃(円)', fontsize=14)
-                ax.set_title(f'家賃 vs {feature}', fontsize=16)
+                ax.set_xlabel(feature_en, fontsize=14)
+                ax.set_ylabel('Rent (Yen)', fontsize=14)
+                ax.set_title(f'Rent vs {feature_en}', fontsize=16)
                 ax.legend()
                 st.pyplot(fig)
-            
-            
-            # 家賃のヒストグラム
-            fig, ax = plt.subplots()
-            counts, bins, patches = ax.hist(filtered_df['家賃(円)'], bins=20, color='skyblue')
 
-            # 選択された物件がどのビンに属するかを見つける
-            bin_index = np.digitize([selected_property['家賃(円)']], bins)[0] - 1
-            patches[bin_index].set_facecolor('red')
+            # Histograms
+            def plot_histogram(data, selected_value, title, x_label):
+                fig, ax = plt.subplots()
+                counts, bins, patches = ax.hist(data, bins=20, color='skyblue')
+                bin_index = np.digitize([selected_value], bins)[0] - 1
 
-            ax.set_title('家賃のヒストグラム')
-            ax.set_xlabel('家賃(円)')
-            ax.set_ylabel('件数')
-            st.pyplot(fig)
-            
-            # 最寄駅1からの時間(分)のヒストグラム
-            fig, ax = plt.subplots()
-            counts, bins, patches = ax.hist(filtered_df['最寄駅1からの時間(分)'], bins=20, color='skyblue')
+                # 範囲内に収めるためのチェックを追加
+                if bin_index >= len(patches):
+                    bin_index = len(patches) - 1
+                elif bin_index < 0:
+                    bin_index = 0
 
-            bin_index = np.digitize([selected_property['最寄駅1からの時間(分)']], bins)[0] - 1
-            patches[bin_index].set_facecolor('red')
-
-            ax.set_title('最寄駅1からの時間のヒストグラム')
-            ax.set_xlabel('最寄駅1からの時間(分)')
-            ax.set_ylabel('件数')
-            st.pyplot(fig)
+                patches[bin_index].set_facecolor('red')
+                ax.set_title(title)
+                ax.set_xlabel(x_label)
+                ax.set_ylabel('Count')
+                st.pyplot(fig)
 
 
-            # 築年数のヒストグラム
-            fig, ax = plt.subplots()
-            counts, bins, patches = ax.hist(filtered_df['築年数(年)'], bins=20, color='skyblue')
-
-            bin_index = np.digitize([selected_property['築年数(年)']], bins)[0] - 1
-            patches[bin_index].set_facecolor('red')
-
-            ax.set_title('築年数のヒストグラム')
-            ax.set_xlabel('築年数(年)')
-            ax.set_ylabel('件数')
-            st.pyplot(fig)
-
-            # 面積(m2)のヒストグラム
-            fig, ax = plt.subplots()
-            counts, bins, patches = ax.hist(filtered_df['面積(m2)'], bins=20, color='skyblue')
-
-            bin_index = np.digitize([selected_property['面積(m2)']], bins)[0] - 1
-            patches[bin_index].set_facecolor('red')
-
-            ax.set_title('面積のヒストグラム')
-            ax.set_xlabel('面積(m2)')
-            ax.set_ylabel('件数')
-            st.pyplot(fig)
+            plot_histogram(filtered_df['家賃(円)'], selected_property['家賃(円)'], 'Rent Histogram', 'Rent (Yen)')
+            plot_histogram(filtered_df['最寄駅1からの時間(分)'], selected_property['最寄駅1からの時間(分)'], 'Time to Nearest Station Histogram', 'Time to Nearest Station 1 (min)')
+            plot_histogram(filtered_df['築年数(年)'], selected_property['築年数(年)'], 'Building Age Histogram', 'Building Age (years)')
+            plot_histogram(filtered_df['面積(m2)'], selected_property['面積(m2)'], 'Area Histogram', 'Area (m2)')
 
 
             
