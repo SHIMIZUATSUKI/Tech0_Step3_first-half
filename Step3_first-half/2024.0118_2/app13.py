@@ -85,10 +85,10 @@ wards_of_tokyo = ["足立区", "荒川区", "板橋区", "江戸川区", "大田
                   "千代田区", "豊島区", "中野区", "練馬区", "目黒区", "文京区", "港区"]
 
 def main():
-    st.title('Real estate information viewer and cost simulator for 23 Ward, Tokyo')
+    st.title('Real Estate Analysis Cost Simulation for 23 Ward, Tokyo')
     st.write('*東京都23区の不動産情報を検索できます。')
     st.write('*主に2人暮らしをはじめる方向けです。')
-    st.write('*さらに気になった物件の費用をシュミレーションできます。')
+    st.write('*気になった物件の費用をシュミレーションできます。')
 
     df = load_data()
 
