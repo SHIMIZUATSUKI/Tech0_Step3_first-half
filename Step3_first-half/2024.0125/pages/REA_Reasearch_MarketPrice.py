@@ -176,9 +176,9 @@ def main():
                             filtered_df.loc[property_no, '家賃(円)'],
                             color='red', label='選択された物件')
                 
-                ax.set_xlabel(feature, fontsize=14)
-                ax.set_ylabel('家賃(円)', fontsize=14)
-                ax.set_title(f'家賃 vs {feature}', fontsize=16)
+                ax.set_xlabel(feature, fontsize=10)
+                ax.set_ylabel('家賃(円)', fontsize=10)
+                ax.set_title(f'家賃 vs {feature}', fontsize=10)
                 ax.legend()
                 st.pyplot(fig)
             
