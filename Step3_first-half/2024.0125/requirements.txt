@@ -6,3 +6,4 @@ requests==2.31.0
 urllib3==1.26.16
 matplotlib==3.8.0
 streamlit-folium
+plotly==5.17.0
