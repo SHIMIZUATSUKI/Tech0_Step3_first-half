@@ -93,7 +93,7 @@ wards_of_tokyo = ["足立区", "荒川区", "板橋区", "江戸川区", "大田
                   "千代田区", "豊島区", "中野区", "練馬区", "目黒区", "文京区", "港区"]
 
 def main():
-    st.title('Real estate information viewer and cost simulator for 23 Ward, Tokyo')
+    st.title('Real Estate Analysis Reasearch MarketPrice for 23 Ward, Tokyo')
     st.write('*東京都23区の不動産情報を検索できます。')
     st.write('*主に2人暮らしをはじめる方向けです。')
     st.write('*さらに気になった物件の費用をシュミレーションできます。')
@@ -143,7 +143,7 @@ def main():
         filtered_df = st.session_state['filtered_df']
         filtered_df.index.name = '物件No.'
         st.write(f"条件に合った物件数: {len(filtered_df)}")
-        st.dataframe(filtered_df.reset_index()[['物件No.', '物件名', 'アクセス', '間取り', '家賃(円)', '管理費(円)', '敷金(円)', '礼金(円)', '建物の階数', '面積(m2)', '築年数(年)', '住所', 'URL']], width=1500, height=500)
+        st.dataframe(filtered_df.reset_index()[['物件No.', '物件名', 'アクセス', '間取り', '家賃(円)', '管理費(円)', '敷金(円)', '礼金(円)', '階数','建物の階数', '面積(m2)', '築年数(年)', '住所', 'URL']], width=1500, height=500)
         
         property_no = st.selectbox('物件Noを選択してください', filtered_df.index, index=0)
 
