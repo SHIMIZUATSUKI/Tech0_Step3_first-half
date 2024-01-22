@@ -13,7 +13,9 @@ import numpy as np
 
 # Define the font family you want to use
 # matplotlib.rcParams['font.family'] = 'monospace'
-plt.rcParams['font.family'] = 'TakaoPGothic'
+#plt.rcParams['font.family'] = 'TakaoPGothic'
+plt.rcParams.update({'font.sans-serif':'Helvetica'})
+
 
 
 # Streamlitのキャッシュデコレータを追加して、データの読み込みを高速化
