@@ -6,13 +6,7 @@ from streamlit_folium import folium_static
 import folium
 import requests
 import urllib
-
-
-
-
-import streamlit as st
 from PIL import Image
-import os
 
 # 画像ファイルの名前を指定
 image_file = "REA.jpg"
@@ -36,7 +30,6 @@ st.write('*本アプリでは主に2人暮らしの方をターゲットにし�
 st.write('*REAを使って、納得いく物件探しにトライしてみましょう!')
 st.write('←左の画面から使いたい機能を選んでください。')
 
-import streamlit as st
 
 # サイドバーにタイトルを追加
 st.sidebar.title("REAの機能")
