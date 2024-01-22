@@ -14,7 +14,7 @@ import numpy as np
 # Define the font family you want to use
 # matplotlib.rcParams['font.family'] = 'monospace'
 #plt.rcParams['font.family'] = 'TakaoPGothic'
-plt.rcParams.update({'font.sans-serif':'Helvetica'})
+#plt.rcParams.update({'font.sans-serif':'Helvetica'})
 
 
 
@@ -161,6 +161,9 @@ def main():
             st.write('1ヶ月の費用:', monthly_cost, '円')
             st.write('1年間の費用:', annual_cost, '円')
             st.write('*初期費用は敷金と礼金を合計した金額です。')    
+            
+            # フォントを設定
+            plt.rcParams.update({'font.family': 'URW Base35 Nimbus Roman Regular'})
 
             # 散布図を描画
             # scatter_x_options = ['最寄駅1からの時間(分)', '築年数(年)', '面積(m2)']
