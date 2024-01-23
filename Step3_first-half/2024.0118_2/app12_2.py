@@ -94,12 +94,22 @@ wards_of_tokyo = ["足立区", "荒川区", "板橋区", "江戸川区", "大田
                   "千代田区", "豊島区", "中野区", "練馬区", "目黒区", "文京区", "港区"]
 
 def main():
+    # 1. セッション状態の初期化
+    if 'filtered_df' not in st.session_state:
+        st.session_state.filtered_df = pd.DataFrame()
+    
+    # session_stateの初期化
+    if 'selected_property_no' not in st.session_state:
+        st.session_state.selected_property_no = None
+        
     st.title('Real Estate Analysis Map Viewer for 23 Ward, Tokyo')
     st.write('*東京都23区の不動産情報を検索できます。')
     st.write('*主に2人暮らしをはじめる方向けです。')
     st.write('*気になるエリアの物件の地図を表示できます。')
 
     df = load_data()
+    filtered_df = df.copy()  # 初期状態では元のデータフレームをコピー
+
 
     # サイドバーの設定
     st.sidebar.title("▼検索条件")
@@ -117,8 +127,18 @@ def main():
     layout = st.sidebar.multiselect('間取り', df['間取り'].unique())
     age_range = st.sidebar.slider('築年数の範囲（年）', 0, 30, (0, 10), 1)
     
+    
+    
+    # データフレームと地図の表示用のプレースホルダーを作成
+    df_placeholder = st.empty()
+    map_placeholder = st.empty()
+
+    
     # 検索ボタン
     if st.sidebar.button('検索'):
+        # 以前の選択をリセット
+        st.session_state.selected_property_no = None
+        
         # 選択された区に基づいてデータをフィルタリング
         if selected_wards:
             df_filtered_by_wards = df[df['住所'].str.contains('|'.join(selected_wards))]
@@ -130,53 +150,91 @@ def main():
         
         # フィルタリングされたデータフレームのインデックスに名前を設定
         filtered_df.index.name = '物件No.'
-
         
         # フィルタリングされた物件数を表示
         filtered_count = len(filtered_df)
         st.write(f"条件に合った物件数: {filtered_count}")
-        st.dataframe(filtered_df.reset_index()[['物件No.', '家賃(円)', 'アクセス', '物件名', '管理費(円)', '敷金(円)', '礼金(円)', '間取り', '面積(m2)', '築年数(年)', '階数', '建物の階数', '住所']], width=1500, height=500)
+            
+        # フィルタリングされたデータフレームの保存
+        # 2. `filtered_df`のセッション状態への保存
+        st.session_state.filtered_df = filtered_df
 
-        # 住所のカラムにジオコーディングを適用
-        filtered_df['Coordinates'] = filtered_df['住所'].apply(get_coordinates)
+        # 地図と物件リストの表示
+        display_map_and_properties(filtered_df)
         
-        # フィルタリングされた物件の座標の平均を計算
-        valid_coords = filtered_df['Coordinates'].dropna()
-        if len(valid_coords) > 0:
-            average_lat = valid_coords.apply(lambda x: x[0]).mean()
-            average_lon = valid_coords.apply(lambda x: x[1]).mean()
-            map_center = [average_lat, average_lon]
-        else:
-            # 有効な座標がない場合、デフォルトの中心座標を使用
-            map_center = [35.6895, 139.6917]
+    # 3. セッション状態からの`filtered_df`の取得
+    if not st.session_state.filtered_df.empty:
+        # 物件Noの選択
+        property_no = st.selectbox('物件Noを選択してください', st.session_state.filtered_df.index, index=0)
+        if property_no != st.session_state.selected_property_no:
+            st.session_state.selected_property_no = property_no
+            # 選択された物件の詳細情報を表示
+            selected_property = st.session_state.filtered_df.loc[st.session_state.selected_property_no]
+            st.write('物件名:', selected_property['物件名'])
+            st.image(selected_property['物件写真'], caption='物件写真')
+            st.markdown(f"[物件の詳細]({selected_property['URL']})", unsafe_allow_html=True)
 
-        # 地図の初期化（平均座標を中心として）
-        m = folium.Map(location=map_center, zoom_start=12)
+                
+            # 住所のカラムにジオコーディングを適用
+            filtered_df['Coordinates'] = filtered_df['住所'].apply(get_coordinates)
+                
+            # フィルタリングされた物件の座標の平均を計算
+            valid_coords = filtered_df['Coordinates'].dropna()
+            if len(valid_coords) > 0:
+                average_lat = valid_coords.apply(lambda x: x[0]).mean()
+                average_lon = valid_coords.apply(lambda x: x[1]).mean()
+                map_center = [average_lat, average_lon]
+            else:
+                # 有効な座標がない場合、デフォルトの中心座標を使用
+                map_center = [35.6895, 139.6917]
 
-        # 各座標にマーカーをプロットし、物件名をポップアップで表示
-        for _, row in filtered_df.iterrows():
-            coord = row['Coordinates']
-            if coord[0] is not None and coord[1] is not None:
-                
-                folium.Circle(
-                location=coord,
-                radius=200,
-                color='blue',
-                fill=True,
-                fill_color='blue'
-               ).add_to(m)
-                
-                folium.Marker(
+            # 地図の初期化（平均座標を中心として）
+            m = folium.Map(location=map_center, zoom_start=12)
+
+            # 各座標にマーカーをプロットし、物件名をポップアップで表示
+            for _, row in filtered_df.iterrows():
+                coord = row['Coordinates']
+                if coord[0] is not None and coord[1] is not None:
+                        
+                    folium.Circle(
                     location=coord,
-                    popup=row['物件名'],
-                    icon=folium.Icon(icon='info-sign')
-                ).add_to(m)
+                    radius=200,
+                    color='blue',
+                    fill=True,
+                    fill_color='blue'
+                    ).add_to(m)
+                        
+                    folium.Marker(
+                        location=coord,
+                        popup=row['物件名'],
+                        icon=folium.Icon(icon='info-sign')
+                        ).add_to(m)
+                        
+            
 
-        # Streamlitアプリに地図を表示
-        folium_static(m)
-        st.write("※地図上に表示される物件の位置は付近住所に所在することを表すものであり、実際の物件所在地とは異なる場合がございます。")
-        st.write("正確な物件所在地は、取扱い不動産会社にお問い合わせください。")
-        
+           
+            # 物件の表示
+            st.dataframe(filtered_df.reset_index()[['物件No.', '家賃(円)', 'アクセス', '物件名', '管理費(円)', '敷金(円)', '礼金(円)', '間取り', '面積(m2)', '築年数(年)', '階数', '建物の階数', '住所']], width=1500, height=500)
+             # Streamlitアプリに地図を表示
+            # 地図をプレースホルダーに表示
+            folium_static(m)
+                
+            st.write("※地図上に表示される物件の位置は付近住所に所在することを表すものであり、実際の物件所在地とは異なる場合がございます。")
+            st.write("正確な物件所在地は、取扱い不動産会社にお問い合わせください。")
+                
+     # 3. セッション状態からの`filtered_df`の取得
+    if not st.session_state.filtered_df.empty:
+        # 物件Noの選択
+        property_no = st.selectbox('物件Noを選択してください', st.session_state.filtered_df.index, index=0)
+        if property_no != st.session_state.selected_property_no:
+            st.session_state.selected_property_no = property_no
+
+            # 選択された物件の詳細情報を表示
+            selected_property = st.session_state.filtered_df.loc[st.session_state.selected_property_no]
+            st.write('物件名:', selected_property['物件名'])
+            st.image(selected_property['物件写真'], caption='物件写真')
+            st.markdown(f"[物件の詳細]({selected_property['URL']})", unsafe_allow_html=True)
+                    
     else:
         st.write("←左の入力欄から条件を設定し、'検索'ボタンを押してください。")
             

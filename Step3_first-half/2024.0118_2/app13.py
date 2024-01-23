@@ -129,7 +129,8 @@ def main():
             filtered_df = st.session_state['filtered_df']
             filtered_df.index.name = '物件No.'
             st.write(f"条件に合った物件数: {len(filtered_df)}")
-            st.dataframe(filtered_df.reset_index()[['物件No.', '物件名', 'アクセス', '間取り', '家賃(円)', '管理費(円)', '敷金(円)', '礼金(円)', '階数', '建物の階数', '面積(m2)', '築年数(年)', '住所', 'URL']], width=1500, height=500)
+            st.dataframe(filtered_df.reset_index()[['物件No.', '家賃(円)', 'アクセス', '物件名', '管理費(円)', '敷金(円)', '礼金(円)', '間取り', '面積(m2)', '築年数(年)', '階数', '建物の階数', '住所']], width=1500, height=500)
+
 
             # 物件Noの選択
             property_no = st.selectbox('物件Noを選択してください', filtered_df.index, index=0)
