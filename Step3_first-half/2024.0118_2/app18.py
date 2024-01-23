@@ -164,8 +164,9 @@ def main():
             st.write('1年間の費用:', annual_cost, '円')
             st.write('*初期費用は敷金と礼金を合計した金額です。')    
             
-            st.title('最寄駅からの時間(分)、築年数(年)、面積(m2)に対する周辺の家賃相場グラフ')
-            st.write('英語表記です。')
+            st.title('気になる物件の家賃相場を確認')
+            st.write('最寄駅からの時間、築年数、面積に対する家賃相場になります。')
+            st.write('英語表記')
 
 
             for feature_jp, feature_en in scatter_x_options.items():
@@ -186,7 +187,8 @@ def main():
                 ax.legend()
                 st.pyplot(fig)
                 
-            st.title('家賃、最寄駅からの時間(分)、築年数(年)、面積(m2)の周辺の相場グラフ')
+            st.title('気になる物件の周辺相場を確認')
+            st.write('家賃、最寄駅からの時間、築年数、面積の周辺の相場になります。')
             st.write('英語表記です。')
 
             # Histograms
