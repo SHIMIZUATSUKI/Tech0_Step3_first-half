@@ -128,10 +128,11 @@ def main():
         if len(st.session_state['filtered_df']) > 0:
             filtered_df = st.session_state['filtered_df']
             filtered_df.index.name = '物件No.'
-            st.write(f"条件に合った物件数: {len(filtered_df)}")
+            st.title(f"条件に合った物件数: {len(filtered_df)}")
             st.dataframe(filtered_df.reset_index()[['物件No.', '家賃(円)', 'アクセス', '物件名', '管理費(円)', '敷金(円)', '礼金(円)', '間取り', '面積(m2)', '築年数(年)', '階数', '建物の階数', '住所']], width=1500, height=500)
 
 
+            st.title("気になる物件の費用を比較する")
             # 物件Noの選択
             property_no = st.selectbox('物件Noを選択してください', filtered_df.index, index=0)
             property_no2 = st.selectbox('比較したい物件Noを選択してください', filtered_df.index, index=1)

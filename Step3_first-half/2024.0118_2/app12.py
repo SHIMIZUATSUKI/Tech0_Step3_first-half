@@ -134,7 +134,7 @@ def main():
         
         # フィルタリングされた物件数を表示
         filtered_count = len(filtered_df)
-        st.write(f"条件に合った物件数: {filtered_count}")
+        st.title(f"条件に合った物件数: {filtered_count}")
         st.dataframe(filtered_df.reset_index()[['物件No.', '家賃(円)', 'アクセス', '物件名', '管理費(円)', '敷金(円)', '礼金(円)', '間取り', '面積(m2)', '築年数(年)', '階数', '建物の階数', '住所']], width=1500, height=500)
 
         # 住所のカラムにジオコーディングを適用
@@ -173,6 +173,7 @@ def main():
                 ).add_to(m)
 
         # Streamlitアプリに地図を表示
+        st.title('物件の所在地')
         folium_static(m)
         st.write("※地図上に表示される物件の位置は付近住所に所在することを表すものであり、実際の物件所在地とは異なる場合がございます。")
         st.write("正確な物件所在地は、取扱い不動産会社にお問い合わせください。")
