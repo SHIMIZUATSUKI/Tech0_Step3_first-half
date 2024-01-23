@@ -163,6 +163,10 @@ def main():
             st.write('1ヶ月の費用:', monthly_cost, '円')
             st.write('1年間の費用:', annual_cost, '円')
             st.write('*初期費用は敷金と礼金を合計した金額です。')    
+            
+            st.title('最寄駅からの時間(分)、築年数(年)、面積(m2)に対する周辺の家賃相場グラフ')
+            st.write('英語表記です。')
+
 
             for feature_jp, feature_en in scatter_x_options.items():
                 fig, ax = plt.subplots()
@@ -181,6 +185,9 @@ def main():
                 ax.set_title(f'Rent vs {feature_en}', fontsize=16)
                 ax.legend()
                 st.pyplot(fig)
+                
+            st.title('家賃、最寄駅からの時間(分)、築年数(年)、面積(m2)の周辺の相場グラフ')
+            st.write('英語表記です。')
 
             # Histograms
             def plot_histogram(data, selected_value, title, x_label):
