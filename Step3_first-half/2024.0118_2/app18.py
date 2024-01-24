@@ -96,7 +96,7 @@ def main():
     st.title('Real Estate Analysis Reasearch MarketPrice for 23 Ward, Tokyo')
     st.write('*東京都23区の不動産情報を検索できます。')
     st.write('*主に2人暮らしをはじめる方向けです。')
-    st.write('*さらに気になった物件の費用をシュミレーションできます。')
+    st.write('*気になった物件の家賃相場を調査できます。')
 
     df = load_data()
 
