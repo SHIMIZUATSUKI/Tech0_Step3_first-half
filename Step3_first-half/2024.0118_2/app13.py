@@ -88,7 +88,7 @@ def main():
     st.title('Real Estate Analysis Cost Simulation for 23 Ward, Tokyo')
     st.write('*東京都23区の不動産情報を検索できます。')
     st.write('*主に2人暮らしをはじめる方向けです。')
-    st.write('*気になった物件の費用を比較シュミレーションできます。')
+    st.write('*気になる物件の費用を比較シュミレーションできます。')
 
     df = load_data()
 
